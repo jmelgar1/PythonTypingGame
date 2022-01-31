@@ -1,7 +1,4 @@
 # Imports
-import os
-from os import path
-
 import pygame, sys
 from pygame.locals import *
 import random
@@ -20,6 +17,7 @@ ALICEBLUE = (240, 248, 255)
 AQUAMARINE = (102, 205, 170)
 COBALT = (61, 145, 64)
 CFBLUE = (100, 149, 237)
+RED = (255, 0, 0)
 
 # Other Variables for use in the program
 SPEED = 5
@@ -28,6 +26,7 @@ inputText = ""
 inputTextActive = True
 points = 0
 background_speed = 5
+wpm = 0
 
 # Create a white screen
 SPACEVIEW = pygame.display.set_mode((1000, 600))
@@ -94,11 +93,19 @@ while True:
 
     #create bottom gui
     pygame.draw.rect(SPACEVIEW, AQUAMARINE, pygame.Rect(50, 530, 900, 150), 2, 100)
+
     #create score counter
     PointHolder = font.render(str(points), True, COBALT)
     SPACEVIEW.blit(PointHolder, (200,550))
     scoreCounter = font.render("Score:", True, CFBLUE)
     SPACEVIEW.blit(scoreCounter, (100, 550))
+
+    #check if word is out of frame
+    if word_X > 1000:
+        background_speed == 0
+        text_gameOver = font.render("Game Over", True, RED)
+        text_rectGameOver = text_gameOver.get_rect(center=(500, 300))
+        SPACEVIEW.blit(text_gameOver, text_rectGameOver)
 
     # Cycles through all occurring events
     for event in pygame.event.get():
@@ -112,10 +119,11 @@ while True:
             #add 1 point for each word
             points += 100
             #speed up background
-            background_speed += 0.35\
+            background_speed += 0.35
 
-            #play sound on correct answer (is broken need to downgrade python version to 3.8)
-            #playsound("correct.wav")
+            #play sound for correct answers (broken for versions over 3.8)
+            if sys.version_info[0] > 3.8:
+                playsound("correct.wav")
 
         #takes in user keyboard input
         elif event.type == pygame.KEYDOWN and inputTextActive:
